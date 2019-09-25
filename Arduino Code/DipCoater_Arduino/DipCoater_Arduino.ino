@@ -67,14 +67,20 @@ uint32_t runModeTimer = 0;  // This holds the time take in runMode
 uint32_t dwellTimer = 0;  // This holds the time take in runMode
 bool resetFlag = false; // For the stop button
 
+unsigned long int stepperSpeed;  // This holds the stepper pulses speed
+int sliderPosition = 100;  // This is for displaying the depth on slider
+unsigned long int distanceTimer;  // This is for calculating how far the unit has moved
+long int distanceTimeS;     // Used with above
+
+
 void setup()
 {
   Serial.begin(9600);
 
   //Stepper setup
   pinMode(STEP_ENA, OUTPUT);
-  digitalWrite(STEP_ENA, HIGH); // STEP_ENA is active LOW
-  stepper.setMaxSpeed(10000);      // Adjust as required
+  digitalWrite(STEP_ENA, HIGH);             // STEP_ENA is active LOW
+  stepper.setMaxSpeed(MAX_STEPPER_SPEED);   // Adjust as required
   //End Stepper setup
 
   // Initialize button objects
@@ -117,6 +123,8 @@ void setup()
   genie.WriteObject(GENIE_OBJ_LED_DIGITS, 1, dwellTime);
   genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);
 
+  genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+  
 }
 
 void loop()
@@ -196,13 +204,14 @@ void loop()
     }
     else
     {
-      genie.WriteObject(GENIE_OBJ_USER_LED, 0, false); // reset runnign LED
+      genie.WriteObject(GENIE_OBJ_USER_LED, 0, false); // reset running LED
     }
 
     // The results of this call will be available to myGenieEventHandler() after the display has responded
     genie.ReadObject(GENIE_OBJ_USER_LED, 0); // Do a manual read from the UserLEd0 object
 
     waitPeriod = millis() + 50; // rerun this code in another 50ms time.
+
   }
 
   // Here we want to deal with the movement of the stepper
@@ -228,14 +237,26 @@ void loop()
       {
         runMode = 2;
         runModeTimer = millis();
+        distanceTimer = millis();
       }      
       break;
     case 2:
       // In this mode we move down until the lower sensor is activated
       // **************** SET STEPPER - TO DO ***********************
-      
-      stepper.setSpeed(downSpeed*CONVERSION_DOWN); // Inverted for down!
+      stepperSpeed = MM_S_to_PULSES(downSpeed);
+      stepper.setSpeed(stepperSpeed); // Inverted for down!
       stepper.runSpeed();
+
+      // Here we calculate the slider position
+      // This assumes the mm/s down rate and the max distance down, along with the time
+      // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
+      distanceTimeS = millis() - distanceTimer;
+      sliderPosition = 100 - ((downSpeed*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+      if(sliderPosition < 0)
+      {
+        sliderPosition=0;
+      }
+      genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
        
       if(DownLimit.pushed() == true)
       {
@@ -243,7 +264,8 @@ void loop()
         runMode = 3;
         dwellTimer = millis();
         runModeTimer = millis();
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, 0);  // Set Slider Value
+        sliderPosition = 0;
+        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
       }
       break;
     case 3:
@@ -263,15 +285,27 @@ void loop()
       {
         runMode = 4;
         runModeTimer = millis();
+        distanceTimer = millis();
         genie.WriteStr(0, F("Moving UP"));
       }
       break;
     case 4:
       // In this mode we move up until the upper sensor is activated
-      // **************** SET STEPPER - TO DO ***********************
-      // Set direction?
-      stepper.setSpeed(upSpeed*CONVERSION_UP);
+      stepperSpeed = MM_S_to_PULSES(upSpeed);
+      stepper.setSpeed(stepperSpeed*(-1));
       stepper.runSpeed();
+      
+      // Here we calculate the slider position
+      // This assumes the mm/s down rate and the max distance down, along with the time
+      // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
+      distanceTimeS = millis() - distanceTimer;
+      sliderPosition = ((upSpeed*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+      if(sliderPosition >= 100)
+      {
+        sliderPosition=100;
+      }
+      genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+
       
       if(UpLimit.pushed() == true)
       {
@@ -279,7 +313,8 @@ void loop()
         runMode = 5;
         runModeTimer = millis();
         genie.WriteStr(0, F("At Top - Waiting"));
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, 100);  // Set Slider Value
+        sliderPosition = 100;
+        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
       }
       break;
     case 5:
@@ -377,7 +412,7 @@ void myGenieEventHandler(void)
             {
               downSpeed = 250;
             }
-            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, downSpeed);
+            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, downSpeed);          
             break;
           case 2:
             dwellTime++;    // Increment the up speed
@@ -385,7 +420,7 @@ void myGenieEventHandler(void)
             {
               dwellTime = 0;
             }
-            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 1, dwellTime);
+            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 1, dwellTime);            
             break;
           case 3:
             upSpeed++;    // Increment the up speed
@@ -393,7 +428,7 @@ void myGenieEventHandler(void)
             {
               upSpeed = 250;
             }
-            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);
+            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);          
             break;
         }
       }
@@ -545,6 +580,7 @@ void myGenieEventHandler(void)
   *************************************************************************************************/
 }
 
+//EEPROM Write routine
 void EEPROMWriteInt(int address, int value)
 {
   byte two = (value & 0xFF);
@@ -553,11 +589,24 @@ void EEPROMWriteInt(int address, int value)
   EEPROM.update(address, two);
   EEPROM.update(address + 1, one);
 }
-
+// EEPROM  Read routine
 int EEPROMReadInt(int address)
 {
   long two = EEPROM.read(address);
   long one = EEPROM.read(address + 1);
 
   return ((two << 0) & 0xFFFFFF) + ((one << 8) & 0xFFFFFFFF);
+}
+
+// mm/s to stepper pulses conversion routine
+int MM_S_to_PULSES(int MM_S)
+{
+  // This converts the mm/s requirement to a stepper motor pulses value
+  float calculation_top;  // This holds the calculation parameter
+  float calculation_base;  // This holds the calculation parameter  
+  unsigned long int speed_pulses;
+  calculation_top = ((MM_S)*(360.0 / STEP_DEGREES)*(MICRO_STEPS));
+  calculation_base  =((TEETH_BELT*BELT_MM_TOOTH)*(TEETH_STEPPER/TEETH_DRIVE)*(1.0/GEARBOX_RATIO));
+  speed_pulses = calculation_top / calculation_base;
+  return (speed_pulses);
 }
