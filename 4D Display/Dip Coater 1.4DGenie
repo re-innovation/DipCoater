@@ -5,7 +5,7 @@ Depends
 end
 Options
     Genie
-    Speed                        9600
+    Speed                        115200
     Checksum                     No
     ResponseSize                 2
     Multidrop                    No
@@ -67,7 +67,7 @@ GSlider
     SolidFill                    Yes
     TickWidth                    1
     Top                          8
-    Width                        35
+    Width                        76
     OnChanged                    'Report Message'
     OnChanging                   'Report Message'
 end
@@ -112,11 +112,11 @@ LedDigits
     Digits                       3
     Height                       68
     LeadingZero                  Yes
-    Left                         313
+    Left                         274
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          8
+    Top                          9
     Width                        131
     OnChanged                    ''
     OnTouchMoving                ''
@@ -186,11 +186,11 @@ LedDigits
     Digits                       3
     Height                       68
     LeadingZero                  Yes
-    Left                         313
+    Left                         274
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          88
+    Top                          89
     Width                        131
     OnChanged                    ''
     OnTouchMoving                ''
@@ -205,11 +205,11 @@ LedDigits
     Digits                       3
     Height                       68
     LeadingZero                  Yes
-    Left                         313
+    Left                         274
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          172
+    Top                          173
     Width                        131
     OnChanged                    ''
     OnTouchMoving                ''
@@ -229,8 +229,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         228
-    Top                          12
+    Left                         188
+    Top                          7
     Transparent                  Yes
     Width                        71
     WordWrap                     Yes
@@ -248,8 +248,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         236
-    Top                          92
+    Left                         196
+    Top                          87
     Transparent                  Yes
     Width                        60
     WordWrap                     Yes
@@ -267,8 +267,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         244
-    Top                          172
+    Left                         204
+    Top                          167
     Transparent                  Yes
     Width                        54
     WordWrap                     Yes
@@ -278,7 +278,7 @@ StaticText
     Alias                        Statictext3
     Alignment                    Left
     AutoSize                     Yes
-    Caption                      mm/s
+    Caption                      mm/m
     Color                        BLACK
     Font.Color                   WHITE
     Font.Effects                 []
@@ -286,10 +286,10 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         444
+    Left                         408
     Top                          228
     Transparent                  Yes
-    Width                        30
+    Width                        35
     WordWrap                     Yes
 end
 StaticText
@@ -297,18 +297,18 @@ StaticText
     Alias                        Statictext4
     Alignment                    Left
     AutoSize                     Yes
-    Caption                      mm/s
+    Caption                      mm/m
     Color                        BLACK
     Font.Color                   WHITE
     Font.Effects                 []
     Font.Name                    Tahoma
     Font.Size                    9
     Font.Style                   []
-    Height                       18
-    Left                         444
-    Top                          64
+    Height                       14
+    Left                         404
+    Top                          60
     Transparent                  Yes
-    Width                        36
+    Width                        35
     WordWrap                     Yes
 end
 StaticText
@@ -324,8 +324,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       19
-    Left                         448
-    Top                          144
+    Left                         408
+    Top                          140
     Transparent                  Yes
     Width                        12
     WordWrap                     Yes
@@ -391,7 +391,7 @@ end
     Name                         4Dbutton0
     Alias                        4Dbutton0
     Height                       64
-    Left                         140
+    Left                         113
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
@@ -405,7 +405,7 @@ end
     Name                         4Dbutton1
     Alias                        4Dbutton1
     Height                       64
-    Left                         140
+    Left                         113
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
@@ -419,7 +419,7 @@ end
     Name                         4Dbutton2
     Alias                        4Dbutton2
     Height                       64
-    Left                         140
+    Left                         113
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
@@ -451,14 +451,14 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         244
+    Left                         204
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          40
+    Top                          35
     Width                        43
     OnChanged                    ''
 end
@@ -484,14 +484,14 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         244
+    Left                         204
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          124
+    Top                          119
     Width                        43
     OnChanged                    ''
 end
@@ -517,14 +517,14 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         244
+    Left                         204
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          200
+    Top                          195
     Width                        43
     OnChanged                    ''
 end

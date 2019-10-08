@@ -13,14 +13,16 @@
 // Distance Conversion Parameters
 // These do not need to be changed, unles design changed
 #define STEP_DEGREES        1.8   // Stepper motor parameter
-#define MICRO_STEPS         8.0     // Micro stepping from controller
+#define MICRO_STEPS         4.0     // Micro stepping from controller
 #define GEARBOX_RATIO       100.0   // 100:1 gearbox ratio
 #define TEETH_STEPPER       27.0    // Number of teeth on the stepper end drive wheel
 #define TEETH_DRIVE         48.0    // Number of teeth of the belt end drive wheel
 #define TEETH_BELT          45.0    // Number of teeth on the main belt drive toother wheel
 #define BELT_MM_TOOTH       5.0     // 5 mm per tooth movement
 #define MOVEMENT_DISTANCE   1000.0  // mm movement of unit
-#define MAX_STEPPER_SPEED   500000  // Max pulses/sec
+#define MAX_STEPPER_SPEED   10000  // Max pulses/sec
+#define MAX_MM_M            450     // Max speed up or down
+
 
 // Button feel settings
 #define DEBOUNCED_BUTTON_THRESHOLD      5
@@ -35,3 +37,5 @@
 #define ESTOP_BUTTON_PIN                7
 #define UP_LIMIT                        2
 #define DOWN_LIMIT                      3
+
+#define DISPLAYUPDATEMS                 100 // mS between each display and button press check update
