@@ -79,6 +79,10 @@ const uint16_t distanceUpdateMs = 500;   // This times when the distance should 
 uint32_t distanceDisplayTimer;  // For holding the time for distance display
 uint32_t waitPeriod;     // For waiting for button press updates
 
+float sliderConversionUp; // For doing fast slider position calculations
+float sliderConversionDown; // For doing fast slider position calculations
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -137,6 +141,11 @@ void setup()
   // We re-do this calculation if the up or down speed has been changed
   downPulses = MM_M_to_PULSES(downSpeed);
   upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up  
+
+  sliderConversionDown = ((float)downSpeed/((float)MOVEMENT_DISTANCE*600.0));  //Real calculation: (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+  sliderConversionUp = ((float)upSpeed/((float)MOVEMENT_DISTANCE*600.0));
+
+  
 }
 
 void loop()
@@ -267,7 +276,7 @@ void loop()
         // This assumes the mm/s down rate and the max distance down, along with the time
         // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
         distanceTimeS = millis() - distanceTimer;
-        sliderPosition = 100 - ((downSpeed*distanceTimeS)/(MOVEMENT_DISTANCE*10)); // Real calculation is 100 - ((downSpeed*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+        sliderPosition = 100 - (distanceTimeS*sliderConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
         if(sliderPosition < 0)
         {
           sliderPosition = 0;
@@ -327,7 +336,10 @@ void loop()
         // This assumes the mm/s down rate and the max distance down, along with the time
         // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
         distanceTimeS = millis() - distanceTimer;
-        sliderPosition = ((upSpeed*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));    // This takes a long time - any way to reduce this?
+        sliderPosition = ((float)distanceTimeS*sliderConversionUp);    // This takes a long time - any way to reduce this?
+        //        // DEBUG
+        //        genie.WriteStr(0, sliderPosition); 
+        
         if(sliderPosition >= 100)
         {
           sliderPosition=100;
@@ -549,7 +561,8 @@ void myGenieEventHandler(void)
               if (downSpeed != oldDownSpeed)
               {
                 // Re calculate downPulses if the speed has been changed
-                downPulses = MM_M_to_PULSES(downSpeed);                
+                downPulses = MM_M_to_PULSES(downSpeed); 
+                sliderConversionDown = ((float)downSpeed/((float)MOVEMENT_DISTANCE*600.0));  //Real calculation: (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));                 
                 EEPROMWriteInt(0, downSpeed);
                 EEPROMwritten = EEPROMwritten + F("Down Speed ");
                 EEPROMchange = true;
@@ -557,7 +570,8 @@ void myGenieEventHandler(void)
               if (upSpeed != oldUpSpeed)
               {
                 // Re calculate upPulses if the speed has been changed
-                upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up         
+                upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up      
+                sliderConversionUp = ((float)upSpeed/((float)MOVEMENT_DISTANCE*600.0));
                 EEPROMWriteInt(4, upSpeed);
                 EEPROMwritten = EEPROMwritten + F("Up Speed ");
                 EEPROMchange = true;
