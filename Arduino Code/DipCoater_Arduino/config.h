@@ -20,7 +20,7 @@
 #define TEETH_BELT          45.0    // Number of teeth on the main belt drive toother wheel
 #define BELT_MM_TOOTH       5.0     // 5 mm per tooth movement
 #define MOVEMENT_DISTANCE   1000.0  // mm movement of unit
-#define MAX_STEPPER_SPEED   10000  // Max pulses/sec
+#define MAX_STEPPER_SPEED   5000  // Max pulses/sec
 #define MAX_MM_M            450     // Max speed up or down
 
 

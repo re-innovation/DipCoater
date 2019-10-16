@@ -82,6 +82,7 @@ uint32_t waitPeriod;     // For waiting for button press updates
 float sliderConversionUp; // For doing fast slider position calculations
 float sliderConversionDown; // For doing fast slider position calculations
 
+bool  displayEnable = true;
 
 void setup()
 {
@@ -156,11 +157,14 @@ void loop()
   UpLimit.update();
   DownLimit.update();  
   
-  // Deal with display
-  genie.DoEvents(); // This calls the library each loop to process the queued responses from the display
+  if(displayEnable == true)
+  {
+    // Deal with display - only when stepper is NOT running
+    genie.DoEvents(); // This calls the library each loop to process the queued responses from the display
+  }
 
   // Deal with buttons as display as required
-  if (millis() >= waitPeriod)
+  if (millis() >= waitPeriod && displayEnable == true)
   {
     // Deal with button data
     if (StartButton.pushed() == true)
@@ -176,46 +180,8 @@ void loop()
         runMode = 1; // Put unit into running down mode
       }
     }
-    if (StopButton.pushed() == true)
-    {
-      if(runModeFlag==false)
-      {
-        genie.WriteStr(0, F("STOP Pressed - Not Running!"));
-      }
-      else if(resetFlag == false)
-      {
-        genie.WriteStr(0, F("STOP Pressed \n - Press again to Reset"));
-        runMode = 6;
-        resetFlag = true; // means we need to reset the process
-      }
-      else
-      {
-        runMode = 4;
-        runModeTimer = millis();
-        genie.WriteStr(0, F("Moving UP \n - Resetting to top"));
-        resetFlag = false; // means we need to reset the process
-      }
-    }
-
-    if (previousEStopButton == true && EStopButton.on() == false)
-    {
-      runModeFlag==false;
-      genie.WriteStr(0, F("E-STOP Actiavted"));
-      runMode = 6;
-      resetFlag = true; // means we need to reset the process      
-      genie.WriteObject(GENIE_OBJ_USER_LED, 1, true);
-      previousEStopButton = false;
-    }
-    else if (previousEStopButton == false && EStopButton.on() == true)
-    {
-      genie.WriteStr(0, "E-STOP Cleared \n - Press Stop to Reset");
-      genie.WriteObject(GENIE_OBJ_USER_LED, 1, false);
-      previousEStopButton = true;
-    }
-    else
-    {
-      previousEStopButton = EStopButton.on();
-    }
+    
+    dealWithStopEStop();
 
     if (runModeFlag == true)
     {
@@ -262,38 +228,41 @@ void loop()
         
         // DEBUG
         genie.WriteStr(0, downPulses);
+        displayEnable = false;  // Stop updating the display until stepper has moved
       }      
       break;
     case 2:
       // In this mode we move down until the lower sensor is activated
       stepper.runSpeed();
       
-      // Want to show the new slider position every so often.
-      // Slow this down to allow more processor time
-      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
-      {      
-        // Here we calculate the slider position
-        // This assumes the mm/s down rate and the max distance down, along with the time
-        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
-        distanceTimeS = millis() - distanceTimer;
-        sliderPosition = 100 - (distanceTimeS*sliderConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
-        if(sliderPosition < 0)
-        {
-          sliderPosition = 0;
-        }
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
-        distanceDisplayTimer = millis();  // reset the timer
-      }
+//      // Want to show the new slider position every so often.
+//      // Slow this down to allow more processor time
+//      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
+//      {      
+//        // Here we calculate the slider position
+//        // This assumes the mm/s down rate and the max distance down, along with the time
+//        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
+//        distanceTimeS = millis() - distanceTimer;
+//        sliderPosition = 100 - (distanceTimeS*sliderConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+//        if(sliderPosition < 0)
+//        {
+//          sliderPosition = 0;
+//        }
+//        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+//        distanceDisplayTimer = millis();  // reset the timer
+//      }
        
       if(DownLimit.pushed() == true)
       {
         stepper.stop();
+        displayEnable = true;
         runMode = 3;
         dwellTimer = millis();
         runModeTimer = millis();
         sliderPosition = 0;
         genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
       }
+      dealWithStopEStop();
       break;
       
     case 3:
@@ -319,7 +288,8 @@ void loop()
         distanceDisplayTimer = millis();
         stepper.setSpeed(upPulses);     // Speeds of more than 1000 steps per second are unreliable
         // DEBUG
-        genie.WriteStr(0, upPulses);       
+        genie.WriteStr(0, upPulses);
+        displayEnable = false;        
       }
       break;
       
@@ -327,36 +297,38 @@ void loop()
       // In this mode we move up until the upper sensor is activated
       stepper.runSpeed();
 
-      // Want to show the new slider position every so often.
-      // Slow this down to allow more processor time
-
-      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
-      {  
-        // Here we calculate the slider position
-        // This assumes the mm/s down rate and the max distance down, along with the time
-        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
-        distanceTimeS = millis() - distanceTimer;
-        sliderPosition = ((float)distanceTimeS*sliderConversionUp);    // This takes a long time - any way to reduce this?
-        //        // DEBUG
-        //        genie.WriteStr(0, sliderPosition); 
-        
-        if(sliderPosition >= 100)
-        {
-          sliderPosition=100;
-        }
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
-        distanceDisplayTimer = millis();  // reset the timer
-      }
+//      // Want to show the new slider position every so often.
+//      // Slow this down to allow more processor time
+//
+//      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
+//      {  
+//        // Here we calculate the slider position
+//        // This assumes the mm/s down rate and the max distance down, along with the time
+//        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
+//        distanceTimeS = millis() - distanceTimer;
+//        sliderPosition = ((float)distanceTimeS*sliderConversionUp);    // This takes a long time - any way to reduce this?
+//        //        // DEBUG
+//        //        genie.WriteStr(0, sliderPosition); 
+//        
+//        if(sliderPosition >= 100)
+//        {
+//          sliderPosition=100;
+//        }
+//        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+//        distanceDisplayTimer = millis();  // reset the timer
+//      }
       
       if(UpLimit.pushed() == true)
       {
-        stepper.stop();        
+        stepper.stop();       
+        displayEnable = true; 
         runMode = 5;
         runModeTimer = millis();
         genie.WriteStr(0, F("At Top - Waiting"));
         sliderPosition = 100;
         genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
       }
+      dealWithStopEStop();
       break;
       
     case 5:
@@ -658,4 +630,55 @@ int MM_M_to_PULSES(int MM_M)
   calculation_base  =((TEETH_BELT*BELT_MM_TOOTH)*(TEETH_STEPPER/TEETH_DRIVE)*(1.0/GEARBOX_RATIO)*60); // The 60 converts mm/m into mm/s
   speed_pulses = calculation_top / calculation_base;
   return (speed_pulses);
+}
+
+void dealWithStopEStop()
+{
+    // Deal with stop and E stop buttons
+  if (StopButton.pushed() == true)
+  {
+    stepper.stop();
+    displayEnable = true;       
+    if(runModeFlag==false)
+    {
+      genie.WriteStr(0, F("STOP Pressed - Not Running!"));
+    }
+    else if(resetFlag == false)
+    {
+      genie.WriteStr(0, F("STOP Pressed \n - Press again to Reset"));
+      runMode = 6;
+      resetFlag = true; // means we need to reset the process
+    }
+    else
+    {
+      runMode = 4;
+      runModeTimer = millis();
+      genie.WriteStr(0, F("Moving UP \n - Resetting to top"));
+      resetFlag = false; // means we need to reset the process
+      stepper.setSpeed(upPulses);     // Set stepper speed
+      displayEnable = false;  
+    }
+  }
+
+  if (previousEStopButton == true && EStopButton.on() == false)
+  {
+    stepper.stop();
+    displayEnable = true;  
+    runModeFlag==false;
+    genie.WriteStr(0, F("E-STOP Actiavted"));
+    runMode = 6;
+    resetFlag = true; // means we need to reset the process      
+    genie.WriteObject(GENIE_OBJ_USER_LED, 1, true);
+    previousEStopButton = false;
+  }
+  else if (previousEStopButton == false && EStopButton.on() == true)
+  {
+    genie.WriteStr(0, "E-STOP Cleared \n - Press Stop to Reset");
+    genie.WriteObject(GENIE_OBJ_USER_LED, 1, false);
+    previousEStopButton = true;
+  }
+  else
+  {
+    previousEStopButton = EStopButton.on();
+  }
 }
