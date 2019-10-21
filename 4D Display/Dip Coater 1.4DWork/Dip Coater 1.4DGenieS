@@ -1,7 +1,7 @@
 #platform "Gen4-uLCD-35DT"
 
 
-// generated 10/21/2019 10:37:26 AM
+// generated 10/21/2019 1:30:11 PM
 
 #MODE FLASHBANK_0
 
@@ -124,7 +124,7 @@
     REPORT_MAGIC_EVENT_BYTES 10
     REPORT_MAGIC_EVENT_DBYTES 11
 // End P1.inc
-    nObjects        28
+    nObjects        31
     nInputs         6
     nAniTimers      0
     nStrings        1
@@ -132,7 +132,7 @@
 
 #DATA
     word FormStartIndex 0
-    word FormEndIndex 28
+    word FormEndIndex 31
     word InputControls -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 44, 88
     word InputData t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 22, 2,
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -140,7 +140,7 @@
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                 t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 110, 6,
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
-    word iStrings0  Strings0StartH, Strings0StartL, Strings0Size, 12, 277, 192, 312, WHITE, 0x4549, 0, 1, 1, 0 
+    word iStrings0  Strings0StartH, Strings0StartL, Strings0Size, 145, 244, 444, 280, WHITE, 0x4549, 0, 1, 1, 0 
     word oDipSwitchs 0
     word oKnobs 0
     word oRockerSwitchs 0
@@ -162,7 +162,7 @@
     word oThermometers 0
     word oUserleds 6, iUserled0, iUserled1, iUserled2, iUserled3, iUserled4, iUserled5
     word oVideos 0
-    word oStaticTexts 11, iStatictext0, iStatictext1, iStatictext2, iStatictext3, iStatictext4, iStatictext5, iStatictext6, iStatictext7, iStatictext8, iStatictext9, iStatictext10
+    word oStaticTexts 14, iStatictext0, iStatictext1, iStatictext2, iStatictext3, iStatictext4, iStatictext5, iStatictext6, iStatictext7, iStatictext8, iStatictext9, iStatictext10, iStatictext11, iStatictext12, iStatictext13
     word oSpectrums 0
     word oScopes 0
     word oTanks 0
@@ -182,10 +182,10 @@
     word FormBGcolors 0x0000
     word kKeyboardKeystrokes -1
     word rKeyboardRoutines -1
-    word oLedDigitsn 274, 3, 1, 43, 0,
-                274, 3, 1, 43, 0,
-                274, 3, 1, 43, 0,
-                276, 4, 1, 32, 0
+    word oLedDigitsn 162, 3, 1, 35, 0,
+                158, 3, 1, 35, 0,
+                347, 3, 1, 35, 0,
+                339, 4, 1, 32, 0
 #END
 
 var hFonts[1] ;

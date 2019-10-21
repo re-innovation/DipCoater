@@ -55,14 +55,14 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         8
+    Left                         145
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              LIME
     PaletteEx.Low1               GREEN
     PaletteEx.Low2               GREEN
-    Top                          28
+    Top                          199
     Width                        87
     OnChanged                    ''
 end
@@ -72,14 +72,14 @@ LedDigits
     Color                        BLACK
     Decimals                     0
     Digits                       3
-    Height                       68
+    Height                       58
     LeadingZero                  Yes
-    Left                         274
+    Left                         162
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          9
-    Width                        131
+    Top                          13
+    Width                        105
     OnChanged                    ''
     OnTouchMoving                ''
     OnTouchPressed               ''
@@ -90,7 +90,7 @@ Strings
     Alias                        Strings0
     Alignment                    Left
     BGcolor                      0x4CA847
-    Height                       36
+    Height                       37
     FGcolor                      WHITE
     Font.Bold                    No
     Font.CharSet                 ANSI
@@ -100,11 +100,11 @@ Strings
     Font.Size                    12
     Font.Strikethrough           No
     Font.Underline               No
-    Left                         12
+    Left                         145
     Strings                      ''
     StringsStyle                 Message
-    Top                          277
-    Width                        181
+    Top                          244
+    Width                        300
     OnChanged                    ''
 end
 UserLed
@@ -129,14 +129,14 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         8
+    Left                         353
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              RED
     PaletteEx.High2              RED
     PaletteEx.Low1               MAROON
     PaletteEx.Low2               MAROON
-    Top                          76
+    Top                          200
     Width                        87
     OnChanged                    ''
 end
@@ -146,14 +146,14 @@ LedDigits
     Color                        BLACK
     Decimals                     0
     Digits                       3
-    Height                       68
+    Height                       58
     LeadingZero                  Yes
-    Left                         274
+    Left                         158
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          89
-    Width                        131
+    Top                          93
+    Width                        105
     OnChanged                    ''
     OnTouchMoving                ''
     OnTouchPressed               ''
@@ -165,14 +165,14 @@ LedDigits
     Color                        BLACK
     Decimals                     0
     Digits                       3
-    Height                       68
+    Height                       58
     LeadingZero                  Yes
-    Left                         274
+    Left                         347
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          173
-    Width                        131
+    Top                          16
+    Width                        105
     OnChanged                    ''
     OnTouchMoving                ''
     OnTouchPressed               ''
@@ -190,9 +190,9 @@ StaticText
     Font.Name                    Tahoma
     Font.Size                    9
     Font.Style                   []
-    Height                       14
-    Left                         188
-    Top                          7
+    Height                       26
+    Left                         80
+    Top                          12
     Transparent                  Yes
     Width                        71
     WordWrap                     Yes
@@ -210,8 +210,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         196
-    Top                          87
+    Left                         86
+    Top                          93
     Transparent                  Yes
     Width                        60
     WordWrap                     Yes
@@ -229,8 +229,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         204
-    Top                          167
+    Left                         287
+    Top                          16
     Transparent                  Yes
     Width                        54
     WordWrap                     Yes
@@ -248,8 +248,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         408
-    Top                          228
+    Left                         436
+    Top                          72
     Transparent                  Yes
     Width                        35
     WordWrap                     Yes
@@ -267,8 +267,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         404
-    Top                          60
+    Left                         236
+    Top                          72
     Transparent                  Yes
     Width                        35
     WordWrap                     Yes
@@ -286,8 +286,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       19
-    Left                         408
-    Top                          140
+    Left                         252
+    Top                          152
     Transparent                  Yes
     Width                        12
     WordWrap                     Yes
@@ -305,8 +305,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       16
-    Left                         8
-    Top                          10
+    Left                         145
+    Top                          181
     Transparent                  Yes
     Width                        48
     WordWrap                     Yes
@@ -324,8 +324,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         12
-    Top                          60
+    Left                         357
+    Top                          184
     Transparent                  Yes
     Width                        41
     WordWrap                     Yes
@@ -343,8 +343,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         12
-    Top                          236
+    Left                         109
+    Top                          244
     Transparent                  Yes
     Width                        26
     WordWrap                     Yes
@@ -353,12 +353,12 @@ end
     Name                         4Dbutton0
     Alias                        4Dbutton0
     Height                       64
-    Left                         113
+    Left                         11
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
     Style                        Yellow
-    Top                          16
+    Top                          33
     Type                         Button02
     Width                        64
     OnChanged                    'Report Message'
@@ -367,12 +367,12 @@ end
     Name                         4Dbutton1
     Alias                        4Dbutton1
     Height                       64
-    Left                         112
+    Left                         11
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
     Style                        Yellow
-    Top                          96
+    Top                          119
     Type                         Button02
     Width                        64
     OnChanged                    'Report Message'
@@ -381,12 +381,12 @@ end
     Name                         4Dbutton2
     Alias                        4Dbutton2
     Height                       64
-    Left                         112
+    Left                         12
     Matrix                       -1
     Momentary                    Yes
     Size                         64x64
     Style                        Violet
-    Top                          172
+    Top                          215
     Type                         Button02
     Width                        64
     OnChanged                    'Report Message'
@@ -413,15 +413,15 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         204
+    Left                         86
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          35
-    Width                        43
+    Top                          32
+    Width                        45
     OnChanged                    ''
 end
 UserLed
@@ -446,15 +446,15 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         204
+    Left                         86
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          119
-    Width                        43
+    Top                          113
+    Width                        45
     OnChanged                    ''
 end
 UserLed
@@ -479,15 +479,15 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         204
+    Left                         287
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          195
-    Width                        43
+    Top                          36
+    Width                        45
     OnChanged                    ''
 end
 StaticText
@@ -503,8 +503,8 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       28
-    Left                         204
-    Top                          236
+    Left                         284
+    Top                          80
     Transparent                  Yes
     Width                        46
     WordWrap                     Yes
@@ -531,15 +531,15 @@ UserLed
     Bevel.Outerwidth             1
     Bevel.Visible                Yes
     Height                       28
-    Left                         205
+    Left                         287
     OutlineColor                 BLACK
     OutlineWidth                 0
     PaletteEx.High1              LIME
     PaletteEx.High2              BLACK
     PaletteEx.Low1               'Office 2003 (Olive)'
     PaletteEx.Low2               BLACK
-    Top                          267
-    Width                        43
+    Top                          112
+    Width                        45
     OnChanged                    ''
 end
 LedDigits
@@ -548,14 +548,14 @@ LedDigits
     Color                        BLACK
     Decimals                     0
     Digits                       4
-    Height                       46
+    Height                       58
     LeadingZero                  Yes
-    Left                         276
+    Left                         339
     OutlineColor                 BLACK
     Palette.High                 clLime
     Palette.Low                  0x005100
-    Top                          256
-    Width                        129
+    Top                          92
+    Width                        130
     OnChanged                    ''
     OnTouchMoving                ''
     OnTouchPressed               ''
@@ -574,9 +574,66 @@ StaticText
     Font.Size                    9
     Font.Style                   []
     Height                       14
-    Left                         408
-    Top                          288
+    Left                         448
+    Top                          152
     Transparent                  Yes
     Width                        20
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext11
+    Alias                        Statictext11
+    Alignment                    Left
+    AutoSize                     Yes
+    Caption                      UP
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    9
+    Font.Style                   []
+    Height                       14
+    Left                         36
+    Top                          16
+    Transparent                  Yes
+    Width                        14
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext12
+    Alias                        Statictext12
+    Alignment                    Left
+    AutoSize                     Yes
+    Caption                      DOWN
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    9
+    Font.Style                   []
+    Height                       14
+    Left                         24
+    Top                          104
+    Transparent                  Yes
+    Width                        37
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext13
+    Alias                        Statictext13
+    Alignment                    Left
+    AutoSize                     Yes
+    Caption                      SELECT
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    9
+    Font.Style                   []
+    Height                       14
+    Left                         24
+    Top                          196
+    Transparent                  Yes
+    Width                        42
     WordWrap                     Yes
 end

@@ -2,7 +2,7 @@
 ==============================================================
 4DGL Compiler 2.8.1.0 -- Copyright 2004-2016 4D Labs
 ** C:\Users\Home\Documents\GitHub\DipCoater\4D Display\Dip Coater 1.4DWork\Dip Coater 1.4DGenieS
-compiled Mon Oct 21 10:37:31 2019
+compiled Mon Oct 21 13:30:14 2019
 
 ==============================================================
 ==============================================================
@@ -10,7 +10,7 @@ compiled Mon Oct 21 10:37:31 2019
 
 No Ref for file
 [LINKING]
-function 13, main(main entry point), address 0x1ed, stack usage 108 + 4 
+function 13, main(main entry point), address 0x1f3, stack usage 108 + 4 
 comTX                                  1  word[50]  [local]  (usage 3)
 TouchStatus                           54  word     [local]  (usage 33)
 cmdi                                  51  word     [local]  (usage 60)
@@ -18,21 +18,21 @@ i                                     52  word     [local]  (usage 81)
 j                                     53  word     [local]  (usage 18)
 
 [LINKING]
-function 12, DoGFXObjects, address 0x81c, stack usage 0 + 4 (Empty Function)
+function 12, DoGFXObjects, address 0x822, stack usage 0 + 4 (Empty Function)
 [LINKING]
-function 11, UpdateObjects, address 0x81d, stack usage 4 + 4 
+function 11, UpdateObjects, address 0x823, stack usage 4 + 4 
 newval                                 1  word     [arg]  (usage 39)
 otherOBJ                               2  word     [local]  (usage 114)
 IPidx                                  1  word     [local]  (usage 18)
 
 [LINKING]
-function 10, ActivateForm, address 0xa94, stack usage 6 + 4 
+function 10, ActivateForm, address 0xa9a, stack usage 6 + 4 
 newform                                1  word     [arg]  (usage 3)
 i                                      1  word     [local]  (usage 57)
 j                                      2  word     [local]  (usage 21)
 
 [LINKING]
-function 9, ledDigitsDisplay, address 0xbee, stack usage 20 + 4 
+function 9, ledDigitsDisplay, address 0xbf4, stack usage 20 + 4 
 num                                    7  word[4]  [local]  (usage 6)
 newval                                 6  word     [local]  (usage 6)
 imgidx                                 1  word     [arg]  (usage 21)
@@ -45,14 +45,14 @@ k                                      3  word     [local]  (usage 12)
 l                                      4  word     [local]  (usage 12)
 
 [LINKING]
-function 8, TurnOffButtons, address 0xd16, stack usage 6 + 4 
+function 8, TurnOffButtons, address 0xd1c, stack usage 6 + 4 
 j                                      1  word     [local]  (usage 12)
 k                                      2  word     [local]  (usage 12)
 l                                      3  word     [local]  (usage 12)
 group                                  1  word     [arg]  (usage 3)
 
 [LINKING]
-function 7, WriteObject, address 0xd91, stack usage 8 + 4 
+function 7, WriteObject, address 0xd97, stack usage 8 + 4 
 ObjectType                             1  word     [arg]  (usage 18)
 NewVal                                 2  word     [arg]  (usage 18)
 Objects                                4  word     [local]  (usage 6)
@@ -62,7 +62,7 @@ j                                      2  word     [local]  (usage 18)
 k                                      3  word     [local]  (usage 15)
 
 [LINKING]
-function 6, ReadObject, address 0xedd, stack usage 6 + 4 
+function 6, ReadObject, address 0xee3, stack usage 6 + 4 
 ObjectType                             1  word     [arg]  (usage 30)
 Objects                                3  word     [local]  (usage 6)
 ObjectIdx                              1  word     [arg]  (usage 9)
@@ -70,24 +70,24 @@ j                                      1  word     [local]  (usage 9)
 k                                      2  word     [local]  (usage 21)
 
 [LINKING]
-function 5, SendReport, address 0xf97, stack usage 0 + 4 
+function 5, SendReport, address 0xf9d, stack usage 0 + 4 
 objn                                   2  word     [arg]  (usage 3)
 val                                    2  word     [arg]  (usage 6)
 objt                                   1  word     [arg]  (usage 3)
 id                                     1  word     [arg]  (usage 3)
 
 [LINKING]
-function 4, seroutOcs, address 0xfc9, stack usage 0 + 4 
+function 4, seroutOcs, address 0xfcf, stack usage 0 + 4 
 
 [LINKING]
-function 3, nak0, address 0xfd8, stack usage 0 + 4 
+function 3, nak0, address 0xfde, stack usage 0 + 4 
 
 [LINKING]
-function 2, seroutCS, address 0xfe7, stack usage 0 + 4 
+function 2, seroutCS, address 0xfed, stack usage 0 + 4 
 op                                     1  word     [arg]  (usage 6)
 
 [LINKING]
-function 1, PrintStrings, address 0xff9, stack usage 14 + 4 
+function 1, PrintStrings, address 0xfff, stack usage 14 + 4 
 String                                 2  word     [arg]  (usage 6)
 StringID                               1  word     [local]  (usage 78)
 offs32                                 4  word[2]  [local]  (usage 6)
@@ -188,6 +188,9 @@ IPDatasize                        00000016         22  (usage 3)
 iStatictext0                      00000008          8  (usage 3)
 iStatictext1                      00000009          9  (usage 3)
 iStatictext10                     0000001B         27  (usage 3)
+iStatictext11                     0000001C         28  (usage 3)
+iStatictext12                     0000001D         29  (usage 3)
+iStatictext13                     0000001E         30  (usage 3)
 iStatictext2                      0000000A         10  (usage 3)
 iStatictext3                      0000000B         11  (usage 3)
 iStatictext4                      0000000C         12  (usage 3)
@@ -346,18 +349,18 @@ uadd_3232                         FFFFFFB9         -71  args=3 r=1  (usage 3)
 umul_1616                         FFFFFFB7         -73  args=3 r=1  (usage 3)
 
 [USER FUNCTIONS]
-ActivateForm                      00000A94  args=1 r=0  (usage 9)
-DoGFXObjects                      0000081C  args=0 r=0  (usage 6)
-ledDigitsDisplay                  00000BEE  args=3 r=0  (usage 6)
-nak0                              00000FD8  args=0 r=0  (usage 24)
-PrintStrings                      00000FF9  args=3 r=0  (usage 9)
-ReadObject                        00000EDD  args=2 r=0  (usage 3)
-SendReport                        00000F97  args=4 r=0  (usage 6)
-seroutCS                          00000FE7  args=1 r=0  (usage 15)
-seroutOcs                         00000FC9  args=0 r=0  (usage 3)
-TurnOffButtons                    00000D16  args=1 r=0  (usage 6)
-UpdateObjects                     0000081D  args=1 r=0  (usage 3)
-WriteObject                       00000D91  args=3 r=0  (usage 24)
+ActivateForm                      00000A9A  args=1 r=0  (usage 9)
+DoGFXObjects                      00000822  args=0 r=0  (usage 6)
+ledDigitsDisplay                  00000BF4  args=3 r=0  (usage 6)
+nak0                              00000FDE  args=0 r=0  (usage 24)
+PrintStrings                      00000FFF  args=3 r=0  (usage 9)
+ReadObject                        00000EE3  args=2 r=0  (usage 3)
+SendReport                        00000F9D  args=4 r=0  (usage 6)
+seroutCS                          00000FED  args=1 r=0  (usage 15)
+seroutOcs                         00000FCF  args=0 r=0  (usage 3)
+TurnOffButtons                    00000D1C  args=1 r=0  (usage 6)
+UpdateObjects                     00000823  args=1 r=0  (usage 3)
+WriteObject                       00000D97  args=3 r=0  (usage 24)
 
 [GLOBAL VARIABLES]
 cmd                                   88  word[80]   (usage 84)
@@ -382,7 +385,7 @@ TouchYpos                             43  word       (usage 9)
 [PRIVATE VARIABLES]
 
 [DATA]
-0007: 00 00 1C 00 FF FF FF FF FF FF FF FF FF FF FF FF     ....ÿÿÿÿÿÿÿÿÿÿÿÿ
+0007: 00 00 1F 00 FF FF FF FF FF FF FF FF FF FF FF FF     ....ÿÿÿÿÿÿÿÿÿÿÿÿ
 0017: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF     ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
 0027: FF FF FF FF FF FF 00 00 2C 00 58 00 1E 00 01 00     ÿÿÿÿÿÿ..,.X.....
 0037: FF FF FF FF FF FF FF FF FF FF FF FF 00 00 16 00     ÿÿÿÿÿÿÿÿÿÿÿÿ....
@@ -393,25 +396,26 @@ TouchYpos                             43  word       (usage 9)
 0087: 00 00 01 00 1E 00 01 00 FF FF FF FF FF FF FF FF     ........ÿÿÿÿÿÿÿÿ
 0097: FF FF FF FF 00 00 6E 00 06 00 64 00 00 00 00 00     ÿÿÿÿ..n...d.....
 00A7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00     ................
-00B7: 00 00 00 00 01 00 0C 00 15 01 C0 00 38 01 FF FF     ..........À.8.ÿÿ
+00B7: 00 00 00 00 01 00 91 00 F4 00 BC 01 18 01 FF FF     ......‘.ô.¼...ÿÿ
 00C7: 49 45 00 00 01 00 01 00 00 00 00 00 00 00 00 00     IE..............
 00D7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00     ................
 00E7: FF FF 00 00 00 00 00 00 00 00 04 00 01 00 04 00     ÿÿ..............
 00F7: 06 00 19 00 00 00 01 00 B7 80 00 00 06 00 00 00     ........·€......
-0107: 03 00 14 00 15 00 16 00 18 00 00 00 0B 00 08 00     ................
+0107: 03 00 14 00 15 00 16 00 18 00 00 00 0E 00 08 00     ................
 0117: 09 00 0A 00 0B 00 0C 00 0D 00 0E 00 0F 00 10 00     ................
-0127: 17 00 1B 00 00 00 00 00 00 00 00 00 00 00 03 00     ................
-0137: 11 00 12 00 13 00 00 00 00 00 00 00 00 00 00 00     ................
-0147: 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF     ............ÿÿÿÿ
-0157: 12 01 03 00 01 00 2B 00 00 00 12 01 03 00 01 00     ......+.........
-0167: 2B 00 00 00 12 01 03 00 01 00 2B 00 00 00 14 01     +.........+.....
-0177: 04 00 01 00 20 00 00 00 00 00 4D 6F 75 6E 74 69     .... .....Mounti
-0187: 6E 67 2E 2E 2E 0A 00 44 72 69 76 65 20 6E 6F 74     ng.....Drive not
-0197: 20 6D 6F 75 6E 74 65 64 2E 2E 2E 00 44 49 50 43      mounted....DIPC
-01A7: 4F 41 7E 31 2E 64 61 74 00 44 49 50 43 4F 41 7E     OA~1.dat.DIPCOA~
-01B7: 31 2E 67 63 69 00 44 49 50 43 4F 41 7E 31 2E 74     1.gci.DIPCOA~1.t
-01C7: 78 66 00 5A 07 5A 07 5A 07 5A 07 5A 07 5A 07 6B     xf.Z.Z.Z.Z.Z.Z.k
-01D7: 07 5A 07 1B 08 1B 08 6B 07 E5 0D FD 0D              .Z.....k.å.ý.
+0127: 17 00 1B 00 1C 00 1D 00 1E 00 00 00 00 00 00 00     ................
+0137: 00 00 00 00 03 00 11 00 12 00 13 00 00 00 00 00     ................
+0147: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00     ................
+0157: 00 00 FF FF FF FF A2 00 03 00 01 00 23 00 00 00     ..ÿÿÿÿ¢.....#...
+0167: 9E 00 03 00 01 00 23 00 00 00 5B 01 03 00 01 00     ž.....#...[.....
+0177: 23 00 00 00 53 01 04 00 01 00 20 00 00 00 00 00     #...S..... .....
+0187: 4D 6F 75 6E 74 69 6E 67 2E 2E 2E 0A 00 44 72 69     Mounting.....Dri
+0197: 76 65 20 6E 6F 74 20 6D 6F 75 6E 74 65 64 2E 2E     ve not mounted..
+01A7: 2E 00 44 49 50 43 4F 41 7E 31 2E 64 61 74 00 44     ..DIPCOA~1.dat.D
+01B7: 49 50 43 4F 41 7E 31 2E 67 63 69 00 44 49 50 43     IPCOA~1.gci.DIPC
+01C7: 4F 41 7E 31 2E 74 78 66 00 60 07 60 07 60 07 60     OA~1.txf.`.`.`.`
+01D7: 07 60 07 60 07 71 07 60 07 21 08 21 08 71 07 EB     .`.`.q.`.!.!.q.ë
+01E7: 0D 03 0E                                            ...
 
 [__MAXPROG]
 32750
@@ -421,7 +425,7 @@ TouchYpos                             43  word       (usage 9)
 [PROGRAM]
 main
 [CODESIZE]
-4563
+4569
 [MEMSIZE]
 169
 [ARGCOUNT]

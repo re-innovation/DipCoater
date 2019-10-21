@@ -149,7 +149,7 @@ void setup()
   upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up  
 
   distanceConversionDown = ((float)downSpeed/(60000.0));  //Real calculation: (((downSpeed/60)*distanceTimeS));
-  distanceConversionUp = ((float)upSpeed/(60000.0));
+  //distanceConversionUp = ((float)upSpeed/(60000.0));
 }
 
 void loop()
@@ -228,9 +228,8 @@ void loop()
         distanceTimer = millis();
         distanceDisplayTimer = millis();
         stepper.setSpeed(downPulses);   // Speeds of more than 1000 steps per second are unreliable       
-        
         // DEBUG
-        genie.WriteStr(0, downPulses);
+        //genie.WriteStr(0, downPulses); // DEBUG line for tsting - must be less than 4500 pulse per sec.
         displayEnable = false;  // Stop updating the display until stepper has moved
       }      
       break;
@@ -243,9 +242,9 @@ void loop()
       if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
       {      
         // Here we calculate the distance moved
-        // This assumes the mm/s down rate and the max distance down, along with the time
+        // This uses the mm/s down rate and the max distance down, along with the time
         distanceTimeS = millis() - distanceTimer;
-        distanceMoved = (distanceTimeS*distanceConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+        distanceMoved = (distanceTimeS * distanceConversionDown); 
         //Serial.println(distanceMoved);
         distanceDisplayTimer = millis();  // reset the timer
       }
@@ -254,7 +253,7 @@ void loop()
         //Ignore this limits when heading down
       }
       
-      if(DownLimit.pushed() == true || distanceMoved>= distanceToMove)
+      if(DownLimit.pushed() == true || distanceMoved >= distanceToMove)
       {
         stepper.stop();
         displayEnable = true;
@@ -265,6 +264,7 @@ void loop()
         {
           genie.WriteStr(0, F("Moved Max Distance"));
         }
+        distanceMoved = 0;  // reset the distance to move
       }
       dealWithStopEStop();
       break;
@@ -301,7 +301,7 @@ void loop()
         distanceDisplayTimer = millis();
         stepper.setSpeed(upPulses);     // Speeds of more than 1000 steps per second are unreliable
         // DEBUG
-        genie.WriteStr(0, upPulses);
+        //genie.WriteStr(0, upPulses);
         displayEnable = false;        
       }
       break;
@@ -441,7 +441,7 @@ void myGenieEventHandler(void)
             genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);          
             break;
           case 4:
-            distanceToMove++;    
+            distanceToMove = distanceToMove+5;        
             if (distanceToMove >= MOVEMENT_DISTANCE)
             {
               distanceToMove = MOVEMENT_DISTANCE;
@@ -483,7 +483,7 @@ void myGenieEventHandler(void)
             genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);
             break;
           case 4:
-            distanceToMove--;    
+            distanceToMove = distanceToMove-5;    
             if (distanceToMove < 0)
             {
               distanceToMove = 0;
@@ -565,7 +565,7 @@ void myGenieEventHandler(void)
               {
                 // Re calculate upPulses if the speed has been changed
                 upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up      
-                distanceConversionUp = ((float)upSpeed/(60000.0));
+                //distanceConversionUp = ((float)upSpeed/(60000.0));
                 EEPROMWriteInt(4, upSpeed);
                 EEPROMwritten = EEPROMwritten + F("Up Speed ");
                 EEPROMchange = true;
