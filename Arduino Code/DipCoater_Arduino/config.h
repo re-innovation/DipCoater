@@ -16,11 +16,11 @@
 #define MICRO_STEPS         4.0     // Micro stepping from controller
 #define GEARBOX_RATIO       100.0   // 100:1 gearbox ratio
 #define TEETH_STEPPER       27.0    // Number of teeth on the stepper end drive wheel
-#define TEETH_DRIVE         48.0    // Number of teeth of the belt end drive wheel
-#define TEETH_BELT          45.0    // Number of teeth on the main belt drive toother wheel
-#define BELT_MM_TOOTH       5.0     // 5 mm per tooth movement
-#define MOVEMENT_DISTANCE   1000.0  // mm movement of unit
-#define MAX_STEPPER_SPEED   5000  // Max pulses/sec
+#define TEETH_DRIVE         40.0    // Number of teeth of the belt end drive wheel
+#define TEETH_BELT          20.0    // Number of teeth on the main belt drive toothed wheel
+#define BELT_MM_TOOTH       8.0     // 8 mm per tooth movement
+#define MOVEMENT_DISTANCE   3000.0  // Max mm movement of unit
+#define MAX_STEPPER_SPEED   5000    // Max pulses/sec
 #define MAX_MM_M            450     // Max speed up or down
 
 

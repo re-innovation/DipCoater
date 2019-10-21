@@ -49,20 +49,21 @@ DebouncedButton DownLimit(DOWN_LIMIT, true);
 
 bool previousEStopButton = true;
 
-int downSpeed;  // Holds the speed
-int upSpeed;
-int downPulses; // Holds the run pulse rate
-int upPulses;
-
-int dwellTime;
+int downSpeed;    // Holds the speed (mm/m)
+int upSpeed;      // Holds the speed (mm/m)
+int downPulses;   // Holds the run pulse rate (Hz)
+int upPulses;     // Holds the run pulse rate (Hz)
+int dwellTime;    // Holds the time to wait (seconds)
+int distanceToMove; // Holds the distance to move (unless hitting down sensors) (mm)
 
 int oldDownSpeed;
 int oldUpSpeed;
 int oldDwellTime;
+int oldDistanceToMove;
 
 String modeData;
 int modeValue = 0;  // This stores the mode we are in
-int modeMax = 4;   // Number of modes we can have
+int modeMax = 5;   // Number of modes we can have
 
 bool runModeFlag = false; // This puts us into run mode which stops value adjustment
 int runMode = 0;  // This is for the running of the unit
@@ -71,16 +72,17 @@ uint32_t dwellTimer = 0;  // This holds the time take in runMode
 bool resetFlag = false; // For the stop button
 
 long int stepperSpeed;  // This holds the stepper pulses speed
-int sliderPosition = 100;  // This is for displaying the depth on slider
+//int sliderPosition = 100;  // This is for displaying the depth on slider
 unsigned long int distanceTimer;  // This is for calculating how far the unit has moved
 long int distanceTimeS;     // Used with above
-
-const uint16_t distanceUpdateMs = 500;   // This times when the distance should be calculated to reduce computational requirements
 uint32_t distanceDisplayTimer;  // For holding the time for distance display
 uint32_t waitPeriod;     // For waiting for button press updates
+long int distanceMoved; // Holds the actual movement distance
 
-float sliderConversionUp; // For doing fast slider position calculations
-float sliderConversionDown; // For doing fast slider position calculations
+const uint16_t distanceUpdateMs = 50;   // This times when the distance should be calculated to reduce computational requirements
+
+float distanceConversionUp;   // For doing fast slider position calculations
+float distanceConversionDown; // For doing fast slider position calculations
 
 bool  displayEnable = true;
 
@@ -125,16 +127,19 @@ void setup()
   downSpeed = EEPROMReadInt(0);
   dwellTime = EEPROMReadInt(2);
   upSpeed = EEPROMReadInt(4);
+  distanceToMove = EEPROMReadInt(6);
 
+  //distanceToMove = 60;  // DEBUG!!
+  
   oldDownSpeed = downSpeed;
   oldUpSpeed = upSpeed;
   oldDwellTime = dwellTime;
-
+  oldDistanceToMove = distanceToMove;
+  
   genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, downSpeed);
   genie.WriteObject(GENIE_OBJ_LED_DIGITS, 1, dwellTime);
   genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);
-
-  genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+  genie.WriteObject(GENIE_OBJ_LED_DIGITS, 3, distanceToMove);
 
   waitPeriod = millis();
        
@@ -143,10 +148,8 @@ void setup()
   downPulses = MM_M_to_PULSES(downSpeed);
   upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up  
 
-  sliderConversionDown = ((float)downSpeed/((float)MOVEMENT_DISTANCE*600.0));  //Real calculation: (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
-  sliderConversionUp = ((float)upSpeed/((float)MOVEMENT_DISTANCE*600.0));
-
-  
+  distanceConversionDown = ((float)downSpeed/(60000.0));  //Real calculation: (((downSpeed/60)*distanceTimeS));
+  distanceConversionUp = ((float)upSpeed/(60000.0));
 }
 
 void loop()
@@ -192,8 +195,8 @@ void loop()
       genie.WriteObject(GENIE_OBJ_USER_LED, 0, false); // reset running LED
     }
 
-    // The results of this call will be available to myGenieEventHandler() after the display has responded
-    genie.ReadObject(GENIE_OBJ_USER_LED, 0); // Do a manual read from the UserLEd0 object
+//    // The results of this call will be available to myGenieEventHandler() after the display has responded
+//    genie.ReadObject(GENIE_OBJ_USER_LED, 0); // Do a manual read from the UserLEd0 object
 
     waitPeriod = millis() + DISPLAYUPDATEMS; // rerun this code in another 100ms time.
 
@@ -203,7 +206,7 @@ void loop()
   // If started then do not allow any adjustment of the values (Works on flags and cannot adjust mode)
 
   // If running the unit will follow this pattern:
-  // Move down at rate of downspeed until low sensor triggered
+  // Move down at rate of downspeed until low sensor triggered or maximum distance moved
   // stay not moving for dwelltime
   // Move up at rate of upspeed until high sensor triggered
   switch (runMode)
@@ -235,32 +238,33 @@ void loop()
       // In this mode we move down until the lower sensor is activated
       stepper.runSpeed();
       
-//      // Want to show the new slider position every so often.
-//      // Slow this down to allow more processor time
-//      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
-//      {      
-//        // Here we calculate the slider position
-//        // This assumes the mm/s down rate and the max distance down, along with the time
-//        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
-//        distanceTimeS = millis() - distanceTimer;
-//        sliderPosition = 100 - (distanceTimeS*sliderConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
-//        if(sliderPosition < 0)
-//        {
-//          sliderPosition = 0;
-//        }
-//        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
-//        distanceDisplayTimer = millis();  // reset the timer
-//      }
-       
-      if(DownLimit.pushed() == true)
+      // Want to check have not hit max depth.
+      // Slow this down to allow more processor time
+      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
+      {      
+        // Here we calculate the distance moved
+        // This assumes the mm/s down rate and the max distance down, along with the time
+        distanceTimeS = millis() - distanceTimer;
+        distanceMoved = (distanceTimeS*distanceConversionDown); // Real calculation is 100 - (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));
+        //Serial.println(distanceMoved);
+        distanceDisplayTimer = millis();  // reset the timer
+      }
+      if(UpLimit.pushed() == true)
+      {
+        //Ignore this limits when heading down
+      }
+      
+      if(DownLimit.pushed() == true || distanceMoved>= distanceToMove)
       {
         stepper.stop();
         displayEnable = true;
         runMode = 3;
         dwellTimer = millis();
         runModeTimer = millis();
-        sliderPosition = 0;
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
+        if(distanceMoved>= distanceToMove)
+        {
+          genie.WriteStr(0, F("Moved Max Distance"));
+        }
       }
       dealWithStopEStop();
       break;
@@ -276,6 +280,15 @@ void loop()
         modeData = "Dwell: " + (String)timer;
         genie.WriteStr(0, modeData);
         dwellTimer = millis();
+      }
+
+      if(UpLimit.pushed() == true)
+      {
+        //Ignore this limits when heading down
+      }
+      if(DownLimit.pushed() == true)
+      {
+        //Ignore this limits when heading down
       }
 
       if (millis() >= runModeTimer + (dwellTime * 1000))
@@ -297,26 +310,10 @@ void loop()
       // In this mode we move up until the upper sensor is activated
       stepper.runSpeed();
 
-//      // Want to show the new slider position every so often.
-//      // Slow this down to allow more processor time
-//
-//      if(millis() >= (distanceDisplayTimer + distanceUpdateMs))
-//      {  
-//        // Here we calculate the slider position
-//        // This assumes the mm/s down rate and the max distance down, along with the time
-//        // percentage distance moved  = ((seconds x mm/s)/MOVEMENT_DISTANCE)*100 %
-//        distanceTimeS = millis() - distanceTimer;
-//        sliderPosition = ((float)distanceTimeS*sliderConversionUp);    // This takes a long time - any way to reduce this?
-//        //        // DEBUG
-//        //        genie.WriteStr(0, sliderPosition); 
-//        
-//        if(sliderPosition >= 100)
-//        {
-//          sliderPosition=100;
-//        }
-//        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
-//        distanceDisplayTimer = millis();  // reset the timer
-//      }
+      if(DownLimit.pushed() == true)
+      {
+        //Ignore this limits when heading up
+      }
       
       if(UpLimit.pushed() == true)
       {
@@ -325,8 +322,6 @@ void loop()
         runMode = 5;
         runModeTimer = millis();
         genie.WriteStr(0, F("At Top - Waiting"));
-        sliderPosition = 100;
-        genie.WriteObject(GENIE_OBJ_SLIDER, 0, sliderPosition);  // Set Slider Value
       }
       dealWithStopEStop();
       break;
@@ -445,6 +440,14 @@ void myGenieEventHandler(void)
             }
             genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);          
             break;
+          case 4:
+            distanceToMove++;    
+            if (distanceToMove >= MOVEMENT_DISTANCE)
+            {
+              distanceToMove = MOVEMENT_DISTANCE;
+            }
+            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 3, distanceToMove);          
+            break; 
         }
       }
 
@@ -479,6 +482,15 @@ void myGenieEventHandler(void)
             }
             genie.WriteObject(GENIE_OBJ_LED_DIGITS, 2, upSpeed);
             break;
+          case 4:
+            distanceToMove--;    
+            if (distanceToMove < 0)
+            {
+              distanceToMove = 0;
+            }
+            genie.WriteObject(GENIE_OBJ_LED_DIGITS, 3, distanceToMove);          
+            break; 
+            
         }
       }
 
@@ -502,24 +514,34 @@ void myGenieEventHandler(void)
               genie.WriteObject(GENIE_OBJ_USER_LED, 2, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 3, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 4, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 5, false);
               break;
             case 1:
               genie.WriteObject(GENIE_OBJ_USER_LED, 2, true);
               genie.WriteObject(GENIE_OBJ_USER_LED, 3, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 4, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 5, false);
               break;
 
             case 2:
               genie.WriteObject(GENIE_OBJ_USER_LED, 2, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 3, true);
               genie.WriteObject(GENIE_OBJ_USER_LED, 4, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 5, false);              
               break;
 
             case 3:
               genie.WriteObject(GENIE_OBJ_USER_LED, 2, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 3, false);
               genie.WriteObject(GENIE_OBJ_USER_LED, 4, true);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 5, false);
               break;
+            case 4:
+              genie.WriteObject(GENIE_OBJ_USER_LED, 2, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 3, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 4, false);
+              genie.WriteObject(GENIE_OBJ_USER_LED, 5, true);
+              break;              
           }
 
           // Here we change the data depending upon the mode
@@ -534,7 +556,7 @@ void myGenieEventHandler(void)
               {
                 // Re calculate downPulses if the speed has been changed
                 downPulses = MM_M_to_PULSES(downSpeed); 
-                sliderConversionDown = ((float)downSpeed/((float)MOVEMENT_DISTANCE*600.0));  //Real calculation: (((downSpeed/60)*distanceTimeS*100)/(MOVEMENT_DISTANCE*1000));                 
+                distanceConversionDown = ((float)downSpeed/(60000.0));  //Real calculation: (((downSpeed/60)*distanceTimeS));
                 EEPROMWriteInt(0, downSpeed);
                 EEPROMwritten = EEPROMwritten + F("Down Speed ");
                 EEPROMchange = true;
@@ -543,7 +565,7 @@ void myGenieEventHandler(void)
               {
                 // Re calculate upPulses if the speed has been changed
                 upPulses = (MM_M_to_PULSES(upSpeed))*(-1.0);  // Inverted for up      
-                sliderConversionUp = ((float)upSpeed/((float)MOVEMENT_DISTANCE*600.0));
+                distanceConversionUp = ((float)upSpeed/(60000.0));
                 EEPROMWriteInt(4, upSpeed);
                 EEPROMwritten = EEPROMwritten + F("Up Speed ");
                 EEPROMchange = true;
@@ -554,6 +576,13 @@ void myGenieEventHandler(void)
                 EEPROMwritten = EEPROMwritten + F("Dwell Time");
                 EEPROMchange = true;
               }
+              if (distanceToMove != oldDistanceToMove)
+              {
+                EEPROMWriteInt(6, distanceToMove);
+                EEPROMwritten = EEPROMwritten + F("Move Distance");
+                EEPROMchange = true;
+              }
+              
               if (EEPROMchange == false)
               {
                 EEPROMwritten = F("No EEPROM Change");
@@ -562,6 +591,7 @@ void myGenieEventHandler(void)
               oldDownSpeed = downSpeed;
               oldUpSpeed = upSpeed;
               oldDwellTime = dwellTime;
+              oldDistanceToMove = distanceToMove;
               break;
 
             case 1:

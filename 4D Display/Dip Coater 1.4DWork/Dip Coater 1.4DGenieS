@@ -1,7 +1,7 @@
 #platform "Gen4-uLCD-35DT"
 
 
-// generated 02/10/2019 14:10:16
+// generated 10/21/2019 10:37:26 AM
 
 #MODE FLASHBANK_0
 
@@ -124,31 +124,28 @@
     REPORT_MAGIC_EVENT_BYTES 10
     REPORT_MAGIC_EVENT_DBYTES 11
 // End P1.inc
-    nObjects        24
-    nInputs         9
+    nObjects        28
+    nInputs         6
     nAniTimers      0
     nStrings        1
 #END
 
 #DATA
     word FormStartIndex 0
-    word FormEndIndex 24
-    word InputControls 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 66, 110, 154
-    word InputData tGSlider, 0, 16, 284, 100, 231, -1, -1, 22, 44, 2,
+    word FormEndIndex 28
+    word InputControls -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 44, 88
+    word InputData t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 22, 2,
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 88, 2,
-                OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 132, 4,
+                t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 66, 4,
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 176, 6,
+                t4Dbutton, 1, -1, -1, -1, -1, -1, -1, 0, 110, 6,
                 OT_REPORT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
-    word iStrings0  Strings0StartH, Strings0StartL, Strings0Size, 216, 272, 471, 305, WHITE, 0x4549, 0, 1, 1, 0 
+    word iStrings0  Strings0StartH, Strings0StartL, Strings0Size, 12, 277, 192, 312, WHITE, 0x4549, 0, 1, 1, 0 
     word oDipSwitchs 0
     word oKnobs 0
     word oRockerSwitchs 0
     word oRotarySwitchs 0
-    word oGSliders 1, iSlider0
+    word oGSliders 0
     word oTrackbars 0
     word oWinButtons 0
     word oAngularmeters 0
@@ -159,13 +156,13 @@
     word oImages 0
     word oKeyboards 0
     word oLeds 0
-    word oLeddigitss 3, iLeddigits0, iLeddigits1, iLeddigits2
+    word oLeddigitss 4, iLeddigits0, iLeddigits1, iLeddigits2, iLeddigits3
     word oMeters 0
     word oStringss 1, iStrings0
     word oThermometers 0
-    word oUserleds 5, iUserled0, iUserled1, iUserled2, iUserled3, iUserled4
+    word oUserleds 6, iUserled0, iUserled1, iUserled2, iUserled3, iUserled4, iUserled5
     word oVideos 0
-    word oStaticTexts 9, iStatictext0, iStatictext1, iStatictext2, iStatictext3, iStatictext4, iStatictext5, iStatictext6, iStatictext7, iStatictext8
+    word oStaticTexts 11, iStatictext0, iStatictext1, iStatictext2, iStatictext3, iStatictext4, iStatictext5, iStatictext6, iStatictext7, iStatictext8, iStatictext9, iStatictext10
     word oSpectrums 0
     word oScopes 0
     word oTanks 0
@@ -187,7 +184,8 @@
     word rKeyboardRoutines -1
     word oLedDigitsn 274, 3, 1, 43, 0,
                 274, 3, 1, 43, 0,
-                274, 3, 1, 43, 0
+                274, 3, 1, 43, 0,
+                276, 4, 1, 32, 0
 #END
 
 var hFonts[1] ;
@@ -227,13 +225,6 @@ func SendReport(var id, var objt, var objn, var val)
     seroutOcs() ;
 endfunc
 
-func TMul(var p1, var p2, var p3)
-    var var32[2], var322[2] ;
-    umul_1616(var32, p1, *(CurInputData+p2)) ;
-    umul_1616(var322, var32[1], *(CurInputData+p3)) ;
-    umul_1616(var32, var32[0], *(CurInputData+p3)) ;
-    return(var32[1] + var322[0]) ;
-endfunc
 
 func ReadObject(var ObjectType, var ObjectIdx)
     var j, k, Objects ;
@@ -684,35 +675,6 @@ cRotaryswitch:
 
 cSlider:
 cTrackbar:
-    if (*(CurInputData+Ofs_IPD_P1))
-        i := TouchXpos - *(CurInputData+Ofs_IPD_P2) ;
-        if (i < 0)
-            i := 0 ;
-        else if (i > *(CurInputData+Ofs_IPD_P3))        // height/width - 17)
-            i := *(CurInputData+Ofs_IPD_P4) ;           // maxvalue-minvalue
-        else
-//            i := *(input+IPD_P4) * i / *(input+IPD_P3) ;    // max-min - (max-min) * posn / (height-17)
-            i := TMul(i, Ofs_IPD_P4, Ofs_IPD_P5) ;    // max-min - (max-min) * posn / (height-17)
-        endif
-    else
-        i := TouchYpos - *(CurInputData+Ofs_IPD_P2) ;
-        if (i < 0)
-            i := *(CurInputData+Ofs_IPD_P4) ;           // maxvalue-minvalue
-        else if (i > *(CurInputData+Ofs_IPD_P3))        // height/width - 17)
-            i := 0 ;
-        else
-//            i := *(input+IPD_P4) - *(input+IPD_P4) * i / *(input+IPD_P3) ;    // max-min - (max-min) * posn / (height-17)
-            i := *(CurInputData+Ofs_IPD_P4) - TMul(i, Ofs_IPD_P4, Ofs_IPD_P5) ;    // max-min - (max-min) * posn / (height-17)
-        endif
-    endif
-    if (InputType == tGSlider)
-        pInputIndex := oGSliders ;
-    else
-        pInputIndex := oTrackbars ;
-    endif
-    pInputIndex += *(CurInputData+Ofs_IPD_OBJVIDX) ;
-    UpdateObjects(i) ;
-endsub ;
 
 c4DButton:
     pInputIndex := o4Dbuttons + *(CurInputData+Ofs_IPD_OBJVIDX) ;
