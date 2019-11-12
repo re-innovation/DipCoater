@@ -1,7 +1,7 @@
 # DipCoater
 A dip coater is a machine which has a controllable up and down movement rate which can be used for adding different thickness coatings to plate and tube materials. It also has a controllable dwell time, which is the length of time that the item stays fully dipped.
 The specifications are: 
-* 0 - 450 mm/s up and down speed maximum
+* 0 - 450 mm/m up and down speed maximum
 * 0 - 999 seconds dwell time
 
 This repository holds:
