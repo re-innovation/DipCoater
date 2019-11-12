@@ -32,9 +32,9 @@ It will move at a rate controlled by "Down Speed".
 
 It will stop either when it hits the lower limit switch (a magnetic switch) OR if the unit has moved the movement distance.
 
-It will then wait for the dwell time.
+It will then wait for the "Dwell Time" in seconds.
 
-It will then rise until it hits the upper limit switch.
+It will then rise (at "Up Speed") until it hits the upper limit switch.
 
 ### Stop and E-Stop
 Pressing the red button will stop the unit. Pressing the red button again will then reset the unit back up to the upper limit switch.
